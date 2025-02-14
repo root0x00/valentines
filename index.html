@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Be My Valentine?</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      background-color: #ffe6e6;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      color: #ff4d4d;
+      font-size: 28px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    button {
+      font-size: 20px;
+      padding: 15px 30px;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: 0.3s ease-in-out;
+      position: relative; /* Initially relative so they participate in normal flow */
+    }
+
+    #yes {
+      background: #ff4d4d;
+      color: white;
+      font-size: 22px;
+    }
+
+    #yes:hover {
+      background: #cc0000;
+      transform: scale(1.2) rotate(5deg);
+    }
+
+    /* Remove absolute positioning from #no initially */
+    #no {
+      background: #cccccc;
+      color: black;
+      font-size: 18px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .hearts {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      color: red;
+      opacity: 0.7;
+      animation: float 4s linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+      }
+      100% {
+        transform: translateY(-10vh) rotate(360deg);
+      }
+    }
+
+    .dance-gif {
+      width: 250px;
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: 0.5s;
+    }
+
+    .funny-msg {
+      font-size: 18px;
+      color: #666;
+      display: none;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Will You Be My Valentine? 💖</h1>
+    <div class="buttons">
+      <button id="yes">Yes</button>
+      <button id="no">No</button>
+    </div>
+    <p class="funny-msg">You can't escape love! 😈</p>
+  </div>
+
+  <div id="hearts-container" class="hearts hidden"></div>
+  <img
+    src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"
+    class="dance-gif hidden"
+    id="danceGif"
+    alt="Dancing GIF"
+  />
+
+  <script>
+    const yesButton = document.getElementById("yes");
+    const noButton = document.getElementById("no");
+    const container = document.querySelector(".container");
+    const heartsContainer = document.getElementById("hearts-container");
+    const danceGif = document.getElementById("danceGif");
+    const funnyMsg = document.querySelector(".funny-msg");
+
+    let noHoverCount = 0;
+    const funnyMessages = [
+      "Nope, not allowed!",
+      "Try again. The answer is Yes!",
+      "You think you have a choice?",
+      "Come on, don't be like that!",
+      "Resistance is futile!",
+      "Just say yes already!"
+    ];
+
+    noButton.addEventListener("mouseover", function () {
+      noHoverCount++;
+
+      // On the first hover, make the No button absolute so we can move it around
+      if (noButton.style.position !== "absolute") {
+        noButton.style.position = "absolute";
+      }
+
+      if (noHoverCount > 3) {
+        funnyMsg.style.display = "block";
+        funnyMsg.innerText =
+          funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+      }
+
+      if (noHoverCount > 5) {
+        noButton.style.transform = "scale(0.5)";
+      }
+
+      const randomX = Math.random() * (window.innerWidth - noButton.offsetWidth);
+      const randomY = Math.random() * (window.innerHeight - noButton.offsetHeight);
+      noButton.style.left = `${randomX}px`;
+      noButton.style.top = `${randomY}px`;
+    });
+
+    yesButton.addEventListener("click", function () {
+      container.innerHTML = "<h1>Yay! You’re my Valentine! 💕</h1>";
+      createHearts();
+      showDanceGif();
+    });
+
+    function createHearts() {
+      heartsContainer.classList.remove("hidden");
+      setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+        heartsContainer.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+      }, 200);
+    }
+
+    function showDanceGif() {
+      danceGif.classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
