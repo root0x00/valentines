@@ -43,7 +43,6 @@
       cursor: pointer;
       border-radius: 10px;
       transition: 0.3s ease-in-out;
-      position: relative; /* Initially relative so they participate in normal flow */
     }
 
     #yes {
@@ -57,7 +56,6 @@
       transform: scale(1.2) rotate(5deg);
     }
 
-    /* Remove absolute positioning from #no initially */
     #no {
       background: #cccccc;
       color: black;
@@ -68,33 +66,8 @@
       display: none;
     }
 
-    .hearts {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .heart {
-      position: absolute;
-      font-size: 24px;
-      color: red;
-      opacity: 0.7;
-      animation: float 4s linear infinite;
-    }
-
-    @keyframes float {
-      0% {
-        transform: translateY(100vh) rotate(0deg);
-      }
-      100% {
-        transform: translateY(-10vh) rotate(360deg);
-      }
-    }
-
-    .dance-gif {
-      width: 250px;
+    .meme {
+      width: 200px;
       position: absolute;
       bottom: 10px;
       left: 50%;
@@ -108,6 +81,25 @@
       display: none;
       margin-top: 15px;
     }
+
+    .confetti {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      font-size: 20px;
+      animation: fall 3s linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -120,20 +112,20 @@
     <p class="funny-msg">You can't escape love! 😈</p>
   </div>
 
-  <div id="hearts-container" class="hearts hidden"></div>
+  <div id="confetti-container" class="confetti hidden"></div>
   <img
     src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif"
-    class="dance-gif hidden"
-    id="danceGif"
-    alt="Dancing GIF"
+    class="meme hidden"
+    id="memeGif"
+    alt="Dancing Meme"
   />
 
   <script>
     const yesButton = document.getElementById("yes");
     const noButton = document.getElementById("no");
     const container = document.querySelector(".container");
-    const heartsContainer = document.getElementById("hearts-container");
-    const danceGif = document.getElementById("danceGif");
+    const confettiContainer = document.getElementById("confetti-container");
+    const memeGif = document.getElementById("memeGif");
     const funnyMsg = document.querySelector(".funny-msg");
 
     let noHoverCount = 0;
@@ -148,49 +140,43 @@
 
     noButton.addEventListener("mouseover", function () {
       noHoverCount++;
-
-      // On the first hover, make the No button absolute so we can move it around
-      if (noButton.style.position !== "absolute") {
-        noButton.style.position = "absolute";
-      }
-
       if (noHoverCount > 3) {
         funnyMsg.style.display = "block";
-        funnyMsg.innerText =
-          funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+        funnyMsg.innerText = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
       }
-
+      
       if (noHoverCount > 5) {
         noButton.style.transform = "scale(0.5)";
       }
-
+      
       const randomX = Math.random() * (window.innerWidth - noButton.offsetWidth);
       const randomY = Math.random() * (window.innerHeight - noButton.offsetHeight);
+      noButton.style.position = "absolute";
       noButton.style.left = `${randomX}px`;
       noButton.style.top = `${randomY}px`;
     });
 
     yesButton.addEventListener("click", function () {
       container.innerHTML = "<h1>Yay! You’re my Valentine! 💕</h1>";
-      createHearts();
-      showDanceGif();
+      createConfetti();
+      showMemeGif();
     });
 
-    function createHearts() {
-      heartsContainer.classList.remove("hidden");
+    function createConfetti() {
+      confettiContainer.classList.remove("hidden");
       setInterval(() => {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
-        heartsContainer.appendChild(heart);
-        setTimeout(() => heart.remove(), 4000);
-      }, 200);
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti-piece");
+        confetti.innerHTML = "🎉";
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.animationDuration = Math.random() * 2 + 3 + "s";
+        confettiContainer.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3000);
+      }, 100);
     }
 
-    function showDanceGif() {
-      danceGif.classList.remove("hidden");
+    function showMemeGif() {
+      memeGif.classList.remove("hidden");
     }
   </script>
 </body>
